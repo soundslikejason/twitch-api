@@ -1,10 +1,17 @@
 $(document).ready(function() {
   function twitchData (json, message, module, user) {
-    if(json.stream) {
+    if (json.stream) {
       document.getElementById(module).style = "background-color: lightgreen";
       var status = json.stream.channel.status;
       var message = document.getElementById(message);
       message.innerHTML = status;
+    } else {
+      $.getJSON("https://wind-bow.gomix.me/twitch-api/channels/" + user + "?callback=?", function(json) {
+        if (json.error === "Not Found") {
+          message = document.getElementById(message);
+          message.innerHTML = user + " does not exist";
+        }
+      });
     }
   }
 
@@ -34,5 +41,9 @@ $(document).ready(function() {
 
   $.getJSON("https://wind-bow.gomix.me/twitch-api/streams/drezzdie?callback=?", function(json){
   twitchData(json, "drezzdie-message", "drezzdie-module", "drezzdie");
+  });
+
+  $.getJSON("https://wind-bow.gomix.me/twitch-api/streams/comster404?callback=?", function(json){
+  twitchData(json, "comster404-message", "comster404-module", "comster404");
   });
 });
